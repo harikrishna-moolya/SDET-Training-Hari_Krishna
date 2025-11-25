@@ -1,8 +1,9 @@
--- To fetch all the information from each table
-select * from tUser;
-select * from tFriends;
-select * from tPosts;
+-- Fetching all the information from each table
+select * from tuser;
+select * from tfriends;
+select * from tposts;
 select * from tComments;
+
 
 
 -- Fetch all information for a user given their username
@@ -58,7 +59,7 @@ SELECT
 FROM tUser as u
 LEFT JOIN tPosts as p 
     ON u.user_id = p.user_id 
-    AND p.created_at >= NOW() - INTERVAL 30 DAY
+    AND p.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
 WHERE p.post_id IS NULL;
 
 
@@ -106,3 +107,4 @@ WHERE f1.user_id = (SELECT user_id FROM tUser WHERE username = 'HARI')
 SET SQL_SAFE_UPDATES = 0;
 DELETE FROM tPosts
 WHERE created_at < (NOW() - INTERVAL 1 YEAR);
+drop table tuser;
