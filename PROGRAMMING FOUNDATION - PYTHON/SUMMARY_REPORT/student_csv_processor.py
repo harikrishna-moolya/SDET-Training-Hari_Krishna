@@ -5,6 +5,9 @@ def read_csv(ip_csv):
         with open(ip_csv, "r", newline="") as file:
             reader = csv.DictReader(file)
             data = list(reader)
+            fields={"Name","Roll No","Marks"}
+            if not fields.issubset(reader.fieldnames):
+                raise ValueError(f"FEW FIELDS ARE MISSING IN {file}")
 
         # Validate required columns
         if "Name" not in reader.fieldnames or "Marks" not in reader.fieldnames:
@@ -74,3 +77,4 @@ if __name__ == "__main__":
         for key, value in summary.items():
 
            print(f"{key}: {value}")
+
