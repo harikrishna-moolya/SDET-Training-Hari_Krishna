@@ -1,6 +1,6 @@
-from Member import Member
+
 #LIBRARY CLASS
-class Library(Member):
+class Library:
     def __init__(self):
         self.books = []     #BOOKS LIST
         self.members = []   #MEMBERS LIST
@@ -76,3 +76,4 @@ class Library(Member):
         
 
 #MAIN CLASS TO EXECUTE BASIC LIBRARY FUNCTIONS
+
