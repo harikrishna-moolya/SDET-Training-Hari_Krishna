@@ -40,7 +40,6 @@ def calculate_statistics(data):
     toppers = [row["Name"] for row in data if row["Marks"] == max_marks]
 
     summary = {
-        "Total Students": len(data),
         "Average Marks": round(avg, 2),
         "Highest Marks": max_marks,
         "Topper(s)": ", ".join(toppers)
@@ -73,4 +72,5 @@ if __name__ == "__main__":
 
         print("\n====== Summary Report =====")
         for key, value in summary.items():
+
            print(f"{key}: {value}")
