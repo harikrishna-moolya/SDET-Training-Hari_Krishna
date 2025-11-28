@@ -1,9 +1,9 @@
-from Book import Book
+
 class Person:
     def __init__(self, name):
         self._name = name
 
-class Member(Person,Book):
+class Member(Person):
     def __init__(self, name, member_id):
         super().__init__(name)
         self._name=name
@@ -31,4 +31,5 @@ class Member(Person,Book):
         return self._name
 
     def __str__(self):
+
         return f"Member: {self._name} | ID: {self._member_id}"
