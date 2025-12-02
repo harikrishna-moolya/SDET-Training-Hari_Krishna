@@ -6,8 +6,13 @@ public class Librarian {
 	private ArrayList<Book> BookList;
     private ArrayList<Member> MemberList;
     private ArrayList<Transaction> TransactionList;
+    private String name;
+    private String employeeId;
 
-    public Librarian() {
+    public Librarian(String name, String employeeId) {
+    	this.name=name;
+    	this.employeeId=employeeId;
+    	System.out.println("Librarian-->name:"+name+"   id:"+employeeId);
         BookList = new ArrayList<>();
         MemberList = new ArrayList<>();
         TransactionList = new ArrayList<>();
