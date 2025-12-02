@@ -12,7 +12,7 @@ public class Main {
 
         while (true) {
             System.out.println("\n===== Library Management System ===== \n1. Add New Book \n2. Remove Book \n3. Add Member"
-            		+ " \n3. Add Member \n4. Issue Book \n5. Return Book \n6. Display Books \n7. Display Members \n8. Show Transactions"
+            		+ " \n4. Issue Book \n5. Return Book \n6. Display Books \n7. Display Members \n8. Show Transactions"
             		+ " \n9. Exit \nChoose an Option: ");
 
             int option = sc.nextInt();
@@ -119,3 +119,4 @@ public class Main {
         }
     }
 }
+
