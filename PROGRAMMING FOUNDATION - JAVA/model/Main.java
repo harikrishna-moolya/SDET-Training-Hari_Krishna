@@ -57,6 +57,10 @@ public class Main {
                         break;
                     }
 
+                    if (b.isAvailable()==false) {
+                            System.out.println("Book is already issued to another member.");
+                            break;
+                        }
                     // create transaction
                     String txnId = "TXN" + System.currentTimeMillis();
                     Transaction txn = new Transaction(txnId, b.getBookId(), m.getMemberId(), LocalDate.now());
@@ -65,6 +69,8 @@ public class Main {
                     m.issueBook(b);
                     System.out.println("Transaction Created: " + txnId);
                     break;
+                    
+                    
 
                 case 5:
                     System.out.print("Enter Member ID: ");
