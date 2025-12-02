@@ -29,7 +29,7 @@ public static void main(String[] args) {
     System.out.println("Getting value from HashMap with the help of Key:"+h1.get(4));
     int k=3;
     int v= h1.get(k);
-    
+    h1.remove(k);
     System.out.println("After Removing  "+k+"-"+v+" pair:"+h1);
 	    for (Map.Entry<Integer, Integer> e : h1.entrySet()) {
 	        System.out.println("Key: " + e.getKey() + " Value: " + e.getValue());
