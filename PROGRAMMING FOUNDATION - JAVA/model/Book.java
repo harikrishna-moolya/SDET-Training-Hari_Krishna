@@ -10,7 +10,7 @@ class Book {
         this.bookId = bookId;
         this.title = title;
         this.author = author;
-        this.isAvailable = true; // false = available
+        this.isAvailable = true; // true = available
     }
 
     public String getBookId() {
@@ -37,4 +37,5 @@ class Book {
                 (isAvailable ?  " (Available)": " (Issued)"));
     }
 }
+
 
