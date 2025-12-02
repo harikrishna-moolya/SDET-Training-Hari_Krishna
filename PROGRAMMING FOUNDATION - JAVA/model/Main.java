@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Librarian center = new Librarian();
+        Librarian center = new Librarian("RAM","LBR1");
 
         while (true) {
             System.out.println("\n===== Library Management System ===== \n1. Add New Book \n2. Remove Book \n3. Add Member"
@@ -119,4 +119,3 @@ public class Main {
         }
     }
 }
-
