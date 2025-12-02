@@ -10,7 +10,7 @@ class Book {
         this.bookId = bookId;
         this.title = title;
         this.author = author;
-        this.isAvailable = false; // false = available
+        this.isAvailable = true; // false = available
     }
 
     public String getBookId() {
@@ -25,13 +25,16 @@ class Book {
         return isAvailable;
     }
 
-    public void markAvailable(boolean status) {
-        this.isAvailable = status;
-    }
+    public void markAvailable() { 
+    	this.isAvailable = true; 
+    }  
+    public void markUnavailable() {
+    	this.isAvailable = false; 
+    	}
 
     public void printDetails() {
         System.out.println("BookId: " + bookId + " | Title: " + title + ", Writer: " + author +
-                (isAvailable ? " (Issued)" : " (Available)"));
+                (isAvailable ?  " (Available)": " (Issued)"));
     }
 }
 
