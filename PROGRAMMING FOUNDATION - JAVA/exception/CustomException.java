@@ -13,7 +13,7 @@ class ResourceNotFoundException extends RuntimeException {
         super(message);
     }
     public ResourceNotFoundException(String User,String message) {
-        super(User);
+        super("USER:"+User+"-"+message);
     }
 }
 
