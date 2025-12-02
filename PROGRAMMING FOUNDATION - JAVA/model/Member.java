@@ -25,7 +25,7 @@ class Member {
         if (!b.isAvailable()) {
             issuedBooks.add(b);
             issuedDates.add(LocalDate.now());
-            b.markAvailable(true);
+            b.markUnavailable();
             System.out.println(name + " issued: " + b.getBookTitle());
         } else {
             System.out.println(b.getBookTitle() + " is not available right now.");
@@ -41,7 +41,7 @@ class Member {
 
             issuedBooks.remove(idx);
             issuedDates.remove(idx);
-            b.markAvailable(false);
+            b.markAvailable();
 
             System.out.println("'"+b.getBookTitle() + "' returned by : " + name + " | Fine: ₹" + penalty);
         } else {
@@ -56,4 +56,3 @@ class Member {
             System.out.println("• " + b.getBookTitle());
     }
 }
-
