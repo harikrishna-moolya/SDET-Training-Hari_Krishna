@@ -37,7 +37,7 @@ class Member {
         if (idx >= 0) {
             LocalDate takenDate = issuedDates.get(idx);
             long diff = ChronoUnit.DAYS.between(takenDate, LocalDate.now());
-            double penalty = diff > 14 ? (diff - 14) * 5 : 0;
+            double penalty = diff > 15 ? (diff - 15) * 2 : 0;
 
             issuedBooks.remove(idx);
             issuedDates.remove(idx);
@@ -56,3 +56,4 @@ class Member {
             System.out.println("• " + b.getBookTitle());
     }
 }
+
