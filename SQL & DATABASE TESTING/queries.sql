@@ -6,12 +6,12 @@ select * from tComments;
 
 
 
--- Fetch all information for a user given their username
+-- Q1: Fetch all information for a user given their username
 
 SELECT * FROM tUser
 WHERE username = 'HARI';
 
--- Get all posts by a specific user, sorted by latest first
+-- Q2: Get all posts by a specific user, sorted by latest first
 SELECT 
     p.post_id,
     u.username,
@@ -24,7 +24,7 @@ JOIN tUser as u ON p.user_id = u.user_id
 WHERE u.username = 'KRISHNA'
 ORDER BY p.created_at DESC;
 
--- Find all friends of a user with 'accepted' status
+-- Q3: Find all friends of a user with 'accepted' status
 
 SELECT 
     f.friendship_id,
@@ -37,7 +37,7 @@ JOIN tUser u ON f.user_id = u.user_id
 JOIN tUser u2 ON f.friend_id = u2.user_id
 WHERE u.username = 'HARI' AND f.status='accepted';
 
--- Get all posts with more than 10 likes
+-- Q4: Get all posts with more than 10 likes
 SELECT 
     p.post_id,
     p.user_id,
@@ -51,7 +51,7 @@ JOIN tUser as u ON p.user_id = u.user_id
 WHERE p.likes_count > 10
 ORDER BY p.likes_count DESC;
 
--- Find users who have not posted in the last 30 days
+-- Q5: Find users who have not posted in the last 30 days
 
 SELECT 
     u.user_id,
@@ -63,7 +63,7 @@ LEFT JOIN tPosts as p
 WHERE p.post_id IS NULL;
 
 
--- Calculate average number of posts per user
+-- Q6: Calculate average number of posts per user
 SELECT 
     COUNT(p.post_id) AS total_posts,
     COUNT(DISTINCT u.user_id) AS total_users,
@@ -71,7 +71,7 @@ SELECT
 FROM tUseras as u
 LEFT JOIN tPosts as p ON u.user_id = p.user_id;
 
--- Find the top 5 users with most friends
+-- Q7: Find the top 5 users with most friends
 
 SELECT u.username, COUNT(*) AS total_friends
 	FROM tFriends as tf
@@ -82,7 +82,7 @@ SELECT u.username, COUNT(*) AS total_friends
 	ORDER BY total_friends DESC
 	LIMIT 5;
     
--- Get all comments for a specific post along with user details
+-- Q8: Get all comments for a specific post along with user details
 
 SELECT c.comment_id, u.user_id, u.username, u.full_name, u.email, c.comment_text, c.created_at
 FROM tComments as c
@@ -90,7 +90,7 @@ JOIN tUser as u ON c.user_id = u.user_id
 WHERE c.post_id = 2
 ORDER BY c.created_at ASC;
 
--- Find mutual friends between two users
+-- Q9:  Find mutual friends between two users
 
 SELECT 
     u.username AS mutual_friend
@@ -103,7 +103,7 @@ WHERE f1.user_id = (SELECT user_id FROM tUser WHERE username = 'HARI')
   AND f2.status= 'accepted';
 
 
--- Delete all posts older than 1 year
+-- Q10: Delete all posts older than 1 year
 SET SQL_SAFE_UPDATES = 0;
 DELETE FROM tPosts
 WHERE created_at < (NOW() - INTERVAL 1 YEAR);
