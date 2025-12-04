@@ -13,12 +13,29 @@ class Book {
         this.isAvailable = true; // false = available
     }
 
+    //Getters & Setters
     public String getBookId() {
         return bookId;
     }
 
-    public String getBookTitle() {
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
+
+    public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public boolean isAvailable() {
@@ -37,4 +54,5 @@ class Book {
                 (isAvailable ?  " (Available)": " (Issued)"));
     }
 }
+
 
