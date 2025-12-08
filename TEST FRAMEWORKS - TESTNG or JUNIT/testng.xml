@@ -1,0 +1,49 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="MasterSuite" parallel="methods" thread-count="3">
+
+    <!-- Global Listener -->
+    <listeners>
+        <listener class-name="CustomListener"/>
+    </listeners>
+
+    <!-- Global Parameters (used by Data_Driven.java) -->
+    <parameter name="browser" value="chrome"/>
+    <parameter name="url" value="https://practicetestautomation.com/practice-test-login/"/>
+
+    <!-- Groups (used inside Data_Driven.java + Dependencies.java) -->
+    <groups>
+        <run>
+            <include name="sanity"/>
+        </run>
+    </groups>
+
+    <!-- TEST 1: Custom Listener Test -->
+    <test name="ListenerTest">
+        <classes>
+            <class name="CustomListener_Test"/>
+        </classes>
+    </test>
+
+    <!-- TEST 2: Data Driven Tests -->
+    <test name="DataDrivenTests">
+        <classes>
+            <class name="Data_Driven"/>
+        </classes>
+    </test>
+
+    <!-- TEST 3: Dependency Tests -->
+    <test name="DependenciesTests">
+        <classes>
+            <class name="Dependencies"/>
+        </classes>
+    </test>
+
+    <!-- TEST 4: Selenium Tests -->
+    <test name="SeleniumTests">
+        <classes>
+            <class name="Selenium_Integration"/>
+        </classes>
+    </test>
+
+</suite>
