@@ -1,0 +1,20 @@
+<suite name="FullSuiteDemo"
+       parallel="methods"
+       thread-count="3">
+
+    <parameter name="browser" value="chrome"/>
+    <parameter name="url" value="https://practicetestautomation.com/practice-test-login/"/>
+
+    <groups>
+        <run>
+            <include name="sanity"/>
+        </run>
+    </groups>
+
+    <test name="WebTests">
+        <classes>
+            <class name="Data_Driven"/>
+        </classes>
+    </test>
+
+</suite>
