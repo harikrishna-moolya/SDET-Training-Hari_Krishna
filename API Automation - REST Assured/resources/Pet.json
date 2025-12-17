@@ -1,0 +1,12 @@
+{
+  "id": 201,
+  "category": {
+    "id": 1,
+    "name": "Dogs"
+  },
+  "name": "Charlie",
+  "photoUrls": [
+    "http://image.com/dog1.jpeg"
+  ],
+  "status": "available"
+}
