@@ -1,20 +1,18 @@
 package config;
 
-import java.io.InputStream;
+import java.io.FileInputStream;
 import java.util.Properties;
 
 public class ConfigReader {
 
-    private static Properties properties = new Properties();
+    private static Properties properties;
 
     static {
         try {
-            InputStream input = ConfigReader.class
-                    .getClassLoader()
-                    .getResourceAsStream("config.properties");
-            properties.load(input);
+            properties = new Properties();
+            properties.load(new FileInputStream("src/main/resources/config.properties"));
         } catch (Exception e) {
-            throw new RuntimeException("Failed to load config file");
+            throw new RuntimeException("Failed to load config.properties");
         }
     }
 
