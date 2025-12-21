@@ -2,7 +2,9 @@ package utils;
 
 public class ExceptionUtil {
 
-    public static void handle(Exception e) {
-        throw new RuntimeException("Test failed: " + e.getMessage());
+    public static RuntimeException throwException(String message, Exception e) {
+        System.err.println("ERROR: " + message);
+        e.printStackTrace();
+        return new RuntimeException(message, e);
     }
 }
