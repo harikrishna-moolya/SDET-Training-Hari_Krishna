@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Cucumber" time="10.245" tests="1" skipped="0" failures="0" errors="0">
+<testcase classname="User CRUD Operations" name="Perform complete CRUD flow" time="9.962">
+<system-out><![CDATA[
+Given API is configured.....................................................passed
+When user creates a new user................................................passed
+Then response status code should be 200.....................................passed
+When user retrieves the user................................................passed
+When user updates the user..................................................passed
+When user deletes the user..................................................passed
+When user fetches invalid user..............................................passed
+Then response status code should be 404.....................................passed
+]]></system-out>
+</testcase>
+</testsuite>
