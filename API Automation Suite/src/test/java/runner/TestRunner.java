@@ -4,9 +4,8 @@ import io.cucumber.testng.AbstractTestNGCucumberTests;
 import io.cucumber.testng.CucumberOptions;
 
 @CucumberOptions(
-        features = "classpath:features",
+        features = "src/main/resources/features",
         glue = "stepdefinitions",
-        monochrome = true,
         plugin = {
                 "pretty",
                 "html:reports/cucumber-report.html",
