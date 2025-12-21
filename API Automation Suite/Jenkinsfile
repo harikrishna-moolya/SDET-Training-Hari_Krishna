@@ -1,10 +1,19 @@
 pipeline {
     agent any
     stages {
-        stage('Build & Test') {
+        stage('Run API Tests') {
             steps {
                 bat 'mvn clean test'
             }
+        }
+    }
+    post {
+        always {
+            publishHTML(target: [
+                reportDir: 'reports',
+                reportFiles: 'cucumber-report.html',
+                reportName: 'API Automation Report'
+            ])
         }
     }
 }
