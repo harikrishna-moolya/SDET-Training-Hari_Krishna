@@ -1,0 +1,16 @@
+//Compile TypeScript to JavaScript
+ to compile TypeScript to JavaScript 
+
+ steps:
+ open command prompt and run the following command in the project where index.ts exists
+
+
+ 1.tsc index.ts
+
+ this will compile and generate index.js
+
+ then run
+ 2.node index.js
+
+ this will give the output of the index.js 
+
