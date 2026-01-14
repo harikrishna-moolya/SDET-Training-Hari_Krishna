@@ -1,6 +1,5 @@
 package request_and_response;
 
-
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -14,12 +13,13 @@ import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInC
 public class Request_And_Response_Validator {
 
     int petId = 101;
+
     @BeforeClass
     public void setup() {
         RestAssured.baseURI = "https://petstore.swagger.io/v2";
     }
-    // POST - Create Pet
 
+    // POST - Create Pet
     @Test(priority = 1)
     public void createPet() {
 
@@ -44,20 +44,16 @@ public class Request_And_Response_Validator {
                         .body(matchesJsonSchemaInClasspath("petSchema.json"))
                         .extract().response();
 
-        // JSONPath extraction
         int id = response.jsonPath().getInt("id");
         String name = response.jsonPath().getString("name");
         String status = response.jsonPath().getString("status");
 
-        // Assertions
         Assert.assertEquals(id, petId);
         Assert.assertEquals(name, "JOHNY");
         Assert.assertEquals(status, "available");
     }
 
-
     // GET - Read Pet
-
     @Test(priority = 2)
     public void getPet() {
 
@@ -71,6 +67,7 @@ public class Request_And_Response_Validator {
                         .statusCode(200)
                         .header("Content-Type", "application/json")
                         .time(org.hamcrest.Matchers.lessThan(5000L))
+                        .body(matchesJsonSchemaInClasspath("petSchema.json"))
                         .extract().response();
 
         int id = response.jsonPath().getInt("id");
@@ -82,9 +79,7 @@ public class Request_And_Response_Validator {
         Assert.assertEquals(status, "available");
     }
 
-
     // PUT - Update Pet
-
     @Test(priority = 3)
     public void updatePet() {
 
@@ -105,6 +100,7 @@ public class Request_And_Response_Validator {
                         .log().all()
                         .statusCode(200)
                         .time(org.hamcrest.Matchers.lessThan(5000L))
+                        .body(matchesJsonSchemaInClasspath("petSchema.json"))
                         .extract().response();
 
         String updatedName = response.jsonPath().getString("name");
@@ -114,9 +110,7 @@ public class Request_And_Response_Validator {
         Assert.assertEquals(updatedStatus, "sold");
     }
 
-
     // DELETE - Delete Pet
-
     @Test(priority = 4)
     public void deletePet() {
 
@@ -128,5 +122,6 @@ public class Request_And_Response_Validator {
                 .log().all()
                 .statusCode(200)
                 .time(org.hamcrest.Matchers.lessThan(5000L));
+        //DELETE has no response body → schema validation not applicable
     }
 }
