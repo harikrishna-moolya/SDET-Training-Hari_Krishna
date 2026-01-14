@@ -1,40 +1,57 @@
-import { test } from '@playwright/test';
-import { Eyes, ClassicRunner } from '@applitools/eyes-playwright';
+import { test, expect } from '@playwright/test';
 
-test('TutorialsNinja Login - Visual Validation', async ({ page }) => {
+test.describe('TutorialsNinja Login Tests', () => {
 
-  const runner = new ClassicRunner();
-  const eyes = new Eyes(runner);
+  const APP_URL =
+    'https://tutorialsninja.com/demo/index.php?route=account/login';
 
-  try {
-    // Open Applitools test
-    await eyes.open(
-      page,
-      'TutorialsNinja App',          // Application name
-      'Login Flow Visual Test'       // Test name
-    );
+  const validUser = {
+    email: 'hk01@gmail.com',
+    password: '1432'
+  };
 
-    // Navigate to Login page
-    await page.goto('https://tutorialsninja.com/demo/index.php?route=account/login');
+  // 1. Login page should load successfully
+  test('Login page should load', async ({ page }) => {
+    await page.goto(APP_URL);
 
-    // Visual checkpoint: Login Page
-    await eyes.checkWindow('Login Page');
+    await expect(page).toHaveURL(/account\/login/);
+    await expect(page.locator('h2')).toContainText('Returning Customer');
+  });
 
-    // Perform login
-    await page.fill('#input-email', 'hk01@gmail.com');
-    await page.fill('#input-password', '1432');
+  // 2. Login with valid credentials
+  test('Login with valid credentials', async ({ page }) => {
+    await page.goto(APP_URL);
+
+    await page.fill('#input-email', validUser.email);
+    await page.fill('#input-password', validUser.password);
     await page.click('input[value="Login"]');
 
-    // Visual checkpoint: My Account Page
-    await eyes.checkWindow('My Account Page');
+    await expect(page).toHaveURL(/account\/account/);
+    await expect(page.locator('h2')).toContainText('My Account');
+  });
 
-    // Close Eyes (ends the visual test)
-    await eyes.close();
+  // 3. Login with invalid credentials
+  test('Login with invalid credentials', async ({ page }) => {
+    await page.goto(APP_URL);
 
-  } finally {
-    // Get all test results
-    const results = await runner.getAllTestResults();
-    console.log(results);
-  }
+    await page.fill('#input-email', 'wrong@gmail.com');
+    await page.fill('#input-password', 'wrong123');
+    await page.click('input[value="Login"]');
+
+    await expect(
+      page.locator('.alert-danger')
+    ).toContainText('Warning: No match for E-Mail Address and/or Password.');
+  });
+
+  // 4. Login with empty fields
+  test('Login with empty fields', async ({ page }) => {
+    await page.goto(APP_URL);
+
+    await page.click('input[value="Login"]');
+
+    await expect(
+      page.locator('.alert-danger')
+    ).toBeVisible();
+  });
 
 });
