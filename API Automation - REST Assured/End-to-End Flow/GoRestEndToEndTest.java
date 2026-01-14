@@ -19,6 +19,7 @@ public class GoRestEndToEndTest {
         RestAssured.baseURI = "https://gorest.co.in/public/v2";
     }
 
+    // CREATE USER
     @Test(priority = 1)
     public void createUser() {
 
@@ -26,10 +27,10 @@ public class GoRestEndToEndTest {
         {
           "name": "Hari Krishna",
           "gender": "male",
-          "email": "hari.k@gmail.com",
+          "email": "hari_%d@gmail.com",
           "status": "active"
         }
-        """.formatted(System.currentTimeMillis());
+        """.formatted(System.currentTimeMillis()); 
 
         Response response =
                 given()
@@ -40,25 +41,37 @@ public class GoRestEndToEndTest {
                         .post("/users")
                         .then()
                         .statusCode(201)
+                        .header("Content-Type", containsString("application/json"))
+                        .body("id", notNullValue())
+                        .body("name", equalTo("Hari Krishna"))
+                        .body("gender", equalTo("male"))
+                        .body("status", equalTo("active"))
                         .extract().response();
 
         userId = response.path("id");
-        System.out.println("User created with ID: " + userId);
     }
 
-    @Test(priority = 2)
+    // GET USER
+    @Test(priority = 2, dependsOnMethods = "createUser") 
     public void getUser() {
+
         given()
                 .header("Authorization", "Bearer " + token)
                 .when()
                 .get("/users/" + userId)
                 .then()
                 .statusCode(200)
-                .body("id", equalTo(userId));
+                .header("Content-Type", containsString("application/json"))
+                .body("id", equalTo(userId))
+                .body("name", equalTo("Hari Krishna"))
+                .body("gender", equalTo("male"))
+                .body("status", equalTo("active"));
     }
 
-    @Test(priority = 3)
+    // UPDATE USER
+    @Test(priority = 3, dependsOnMethods = "getUser") 
     public void updateUser() {
+
         given()
                 .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + token)
@@ -67,11 +80,14 @@ public class GoRestEndToEndTest {
                 .patch("/users/" + userId)
                 .then()
                 .statusCode(200)
+                .body("id", equalTo(userId))
                 .body("name", equalTo("Hari Krishna Akki"));
     }
 
-    @Test(priority = 4)
+    // DELETE USER
+    @Test(priority = 4, dependsOnMethods = "updateUser")
     public void deleteUser() {
+
         given()
                 .header("Authorization", "Bearer " + token)
                 .when()
@@ -80,14 +96,16 @@ public class GoRestEndToEndTest {
                 .statusCode(204);
     }
 
-    @Test(priority = 5)
+    // VERIFY DELETED USER
+    @Test(priority = 5, dependsOnMethods = "deleteUser") 
     public void verifyDeletedUser() {
+
         given()
                 .header("Authorization", "Bearer " + token)
                 .when()
                 .get("/users/" + userId)
                 .then()
-                .statusCode(404);
+                .statusCode(404)
+                .body("message", equalTo("Resource not found"));
     }
 }
-
