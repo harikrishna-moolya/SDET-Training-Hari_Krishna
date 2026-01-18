@@ -17,7 +17,7 @@ public class AuthTests {
         RestAssured.baseURI = "https://dummyjson.com";
     }
 
-    // 1️⃣ Login and get access + refresh tokens
+    // Login and get access + refresh tokens
     @Test(priority = 1)
     public void loginAndGetTokens() {
         Response resp =
@@ -38,7 +38,7 @@ public class AuthTests {
     }
 
 
-    // 2️⃣ Access protected endpoint using Bearer token
+    // Access protected endpoint using Bearer token
     @Test(priority = 2, dependsOnMethods = "loginAndGetTokens")
     public void accessMeWithBearer() {
         given()
@@ -51,7 +51,7 @@ public class AuthTests {
     }
 
 
-    // 3️⃣ Refresh the access token using refresh token
+    //  Refresh the access token using refresh token
 
     @Test(priority = 3, dependsOnMethods = "loginAndGetTokens")
     public void refreshAccessToken() {
@@ -70,7 +70,7 @@ public class AuthTests {
     }
 
 
-    // 4️⃣ Access protected endpoint with refreshed token
+    //  Access protected endpoint with refreshed token
     @Test(priority = 4, dependsOnMethods = "refreshAccessToken")
     public void accessMeWithRefreshedToken() {
         given()
@@ -83,3 +83,4 @@ public class AuthTests {
                 .statusCode(200);
     }
 }
+
