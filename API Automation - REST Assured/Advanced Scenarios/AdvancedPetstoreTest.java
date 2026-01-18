@@ -19,7 +19,7 @@ public class AdvancedPetstoreTest {
         RestAssured.baseURI = "https://petstore.swagger.io/v2";
     }
 
-    // 1️⃣ Send Complex JSON using MAP
+    //  Send Complex JSON using MAP
     @Test
     public void createPetUsingMap() {
 
@@ -44,7 +44,7 @@ public class AdvancedPetstoreTest {
                 .log().all();
     }
 
-    // 2️⃣ Send JSON using POJO (Serialization)
+    //  Send JSON using POJO (Serialization)
     @Test
     public void createPetUsingPojo() {
 
@@ -69,7 +69,7 @@ public class AdvancedPetstoreTest {
                 .log().all();
     }
 
-    // 3️⃣ Send JSON using FILE
+    //  Send JSON using FILE
     @Test
     public void createPetUsingJsonFile() {
 
@@ -85,7 +85,7 @@ public class AdvancedPetstoreTest {
                 .log().all();
     }
 
-    // 4️⃣ Upload File (multipart/form-data)
+    //  Upload File (multipart/form-data)
     @Test
     public void uploadPetImage() {
 
@@ -100,7 +100,7 @@ public class AdvancedPetstoreTest {
                 .log().all();
     }
 
-    // 5️⃣ Cookies - Send & Capture
+    //  Cookies - Send & Capture
     @Test
     public void manageCookies() {
 
@@ -113,7 +113,7 @@ public class AdvancedPetstoreTest {
         System.out.println("Response Cookies: " + response.getCookies());
     }
 
-    // 6️⃣ Enable Request & Response Logging
+    //  Enable Request & Response Logging
     @Test
     public void loggingExample() {
 
@@ -126,7 +126,7 @@ public class AdvancedPetstoreTest {
                 .statusCode(200);
     }
 
-    // 7️⃣ Deserialize JSON → POJO
+    //  Deserialize JSON → POJO
     @Test
     public void deserializeResponseToPojo() {
 
@@ -143,3 +143,4 @@ public class AdvancedPetstoreTest {
         System.out.println("Pet Status: " + pet.status);
     }
 }
+
