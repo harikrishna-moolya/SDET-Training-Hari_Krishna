@@ -41,7 +41,7 @@ public class Request_And_Response_Validator {
                         .statusCode(200)
                         .header("Content-Type", "application/json")
                         .time(org.hamcrest.Matchers.lessThan(5000L))
-                        .body(matchesJsonSchemaInClasspath("petSchema.json"))
+                        .body(matchesJsonSchemaInClasspath("resources/petSchema.json"))
                         .extract().response();
 
         int id = response.jsonPath().getInt("id");
@@ -67,7 +67,7 @@ public class Request_And_Response_Validator {
                         .statusCode(200)
                         .header("Content-Type", "application/json")
                         .time(org.hamcrest.Matchers.lessThan(5000L))
-                        .body(matchesJsonSchemaInClasspath("petSchema.json"))
+                        .body(matchesJsonSchemaInClasspath("resources/petSchema.json"))
                         .extract().response();
 
         int id = response.jsonPath().getInt("id");
@@ -100,7 +100,7 @@ public class Request_And_Response_Validator {
                         .log().all()
                         .statusCode(200)
                         .time(org.hamcrest.Matchers.lessThan(5000L))
-                        .body(matchesJsonSchemaInClasspath("petSchema.json"))
+                        .body(matchesJsonSchemaInClasspath("resources/petSchema.json"))
                         .extract().response();
 
         String updatedName = response.jsonPath().getString("name");
@@ -125,3 +125,4 @@ public class Request_And_Response_Validator {
         //DELETE has no response body → schema validation not applicable
     }
 }
+
