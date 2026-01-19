@@ -1,132 +1,178 @@
 package advancedElementHandling;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.*;
 
 public class Advanced_Element_Handling {
 
     static WebDriver driver;
+    static WebDriverWait wait;
     static Actions actions;
 
+    /* -------- SCREENSHOT ON FAILURE -------- */
+    @Rule
+    public TestWatcher watcher = new TestWatcher() {
+        @Override
+        protected void failed(Throwable e, Description description) {
+            takeScreenshot(description.getMethodName());
+        }
+    };
+
+    /* -------- SETUP -------- */
     @BeforeClass
-    public static void setUp() {
+    public static void setup() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
+        wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(15));
         actions = new Actions(driver);
     }
 
+    /* -------- TEARDOWN -------- */
     @AfterClass
-    public static void tearDown() {
+    public static void teardown() {
         if (driver != null) {
             driver.quit();
         }
     }
 
+    /* -------- DROPDOWNS -------- */
     @Test
-    //FOR DROPDOWNS
-    public void dropdownsTest() throws InterruptedException {
+    public void dropdownsTest() {
+
         driver.get("https://demoqa.com/select-menu");
 
-        // Normal dropdown
-        Select select = new Select(driver.findElement(By.id("oldSelectMenu")));
+        /* ---- STANDARD HTML SELECT ---- */
+        WebElement oldSelectMenu = waitFor(By.id("oldSelectMenu"));
+        scrollIntoView(oldSelectMenu);
+
+        Select select = new Select(oldSelectMenu);
         select.selectByVisibleText("Green");
 
-        // Custom dropdown
-        driver.findElement(By.id("withOptGroup")).click();
-        driver.findElement(By.xpath("//div[text()='Group 2, option 2']")).click();
-
-        Thread.sleep(1500);
+        Assert.assertEquals(
+                "Green",
+                select.getFirstSelectedOption().getText()
+        );
     }
 
+    /* -------- FILE UPLOAD -------- */
     @Test
-    //FOR FILE UPLOAD
-    public void fileUploadTest() throws InterruptedException {
+    public void fileUploadTest() {
+
         driver.get("https://demoqa.com/upload-download");
 
-        WebElement upload = driver.findElement(By.id("uploadFile"));
+        WebElement upload = waitFor(By.id("uploadFile"));
+        scrollIntoView(upload);
         upload.sendKeys("C:\\Users\\Hari Krishna\\Pictures\\sample.png");
 
-        Thread.sleep(1500);
+        WebElement uploadedFile = waitFor(By.id("uploadedFilePath"));
+        Assert.assertTrue(uploadedFile.getText().contains("sample.png"));
     }
 
+    /* -------- DRAG AND DROP -------- */
     @Test
-    //FOR DRAGDOPS
-    public void dragDropTest() throws InterruptedException {
+    public void dragDropTest() {
+
         driver.get("https://demoqa.com/droppable");
 
-        WebElement drag = driver.findElement(By.id("draggable"));
-        WebElement drop = driver.findElement(By.id("droppable"));
+        WebElement drag = waitFor(By.id("draggable"));
+        WebElement drop = waitFor(By.id("droppable"));
 
+        scrollIntoView(drag);
         actions.dragAndDrop(drag, drop).perform();
 
-        Thread.sleep(1500);
+        Assert.assertEquals("Dropped!", drop.getText());
     }
 
+    /* -------- HOVER -------- */
     @Test
-    //FOR HOVER
-    public void hoverTest() throws InterruptedException {
+    public void hoverTest() {
+
         driver.get("https://demoqa.com/tool-tips");
 
-        WebElement hoverBtn = driver.findElement(By.id("toolTipButton"));
+        WebElement hoverBtn = waitFor(By.id("toolTipButton"));
+        scrollIntoView(hoverBtn);
         actions.moveToElement(hoverBtn).perform();
 
-        Thread.sleep(1500);
+        WebElement tooltip =
+                wait.until(ExpectedConditions.presenceOfElementLocated(
+                        By.className("tooltip-inner")));
+
+        Assert.assertTrue(tooltip.isDisplayed());
     }
 
+    /* -------- CALENDAR -------- */
     @Test
-    //FOR CLICKS
-    public void clickActionsTest() throws InterruptedException {
-        driver.get("https://demoqa.com/buttons");
+    public void calendarTest() {
 
-        WebElement rightClickBtn = driver.findElement(By.id("rightClickBtn"));
-        WebElement doubleClickBtn = driver.findElement(By.id("doubleClickBtn"));
+        driver.get("https://demoqa.com/date-picker");
 
-        actions.contextClick(rightClickBtn).perform();
-        actions.doubleClick(doubleClickBtn).perform();
+        WebElement dateInput = waitFor(By.id("datePickerMonthYearInput"));
+        scrollIntoView(dateInput);
+        jsClick(dateInput);
 
-        Thread.sleep(1500);
+        selectCurrentDate();
+
+        Assert.assertFalse(dateInput.getAttribute("value").isEmpty());
     }
 
-    @Test
-    //FOR CALENDER
-    public void calendarTest() throws InterruptedException {
-    	        driver.get("https://demoqa.com/date-picker");
+    private void selectCurrentDate() {
 
-    	        selectCurrentDate();
+        LocalDate today = LocalDate.now();
+        String month = today.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+        String year = String.valueOf(today.getYear());
+        String day = String.valueOf(today.getDayOfMonth());
 
-    	        Thread.sleep(1500);
-    	    }
+        new Select(waitFor(By.className("react-datepicker__month-select")))
+                .selectByVisibleText(month);
 
-    public void selectCurrentDate() {
-    	        // Open the calendar
-    	        driver.findElement(By.id("datePickerMonthYearInput")).click();
+        new Select(waitFor(By.className("react-datepicker__year-select")))
+                .selectByVisibleText(year);
 
-    	        // Get today's date
-    	        LocalDate today = LocalDate.now();
+        WebElement dayElement = waitFor(By.xpath("//div[text()='" + day + "']"));
+        jsClick(dayElement);
+    }
 
-    	        String day = String.valueOf(today.getDayOfMonth());
-    	        String month = today.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH); // e.g. January
-    	        String year = String.valueOf(today.getYear());
+    /* -------- UTILITIES -------- */
+    private static WebElement waitFor(By locator) {
+        return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
 
-    	        // Select Month
-    	        WebElement monthDropdown = driver.findElement(By.className("react-datepicker__month-select"));
-    	        monthDropdown.findElement(By.xpath("//option[text()='" + month + "']")).click();
+    private static void scrollIntoView(WebElement element) {
+        ((JavascriptExecutor) driver)
+                .executeScript("arguments[0].scrollIntoView({block:'center'});", element);
+    }
 
-    	        // Select Year
-    	        WebElement yearDropdown = driver.findElement(By.className("react-datepicker__year-select"));
-    	        yearDropdown.findElement(By.xpath("//option[text()='" + year + "']")).click();
+    private static void jsClick(WebElement element) {
+        ((JavascriptExecutor) driver)
+                .executeScript("arguments[0].click();", element);
+    }
 
-    	        // Select Day
-    	        driver.findElement(By.xpath("//div[text()='" + day + "']")).click();
-     } 
-    
+    private static void takeScreenshot(String testName) {
+        try {
+            File dir = new File("screenshots");
+            if (!dir.exists()) dir.mkdirs();
+
+            File src = ((TakesScreenshot) driver)
+                    .getScreenshotAs(OutputType.FILE);
+
+            Files.copy(src.toPath(),
+                    new File(dir, testName + ".png").toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
+
+        } catch (IOException | WebDriverException ignored) {
+        }
+    }
 }
