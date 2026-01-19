@@ -1,5 +1,13 @@
 package advancedElementHandling;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+
 import org.junit.*;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runners.MethodSorters;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -14,48 +22,84 @@ public class Custom_Waits_Test {
     By enableAfter5SecBtn = By.id("enableAfter");
     By colorChangeBtn = By.id("colorChange");
 
+    /* ---------- SCREENSHOT ON FAILURE ---------- */
+    @Rule
+    public TestWatcher watcher = new TestWatcher() {
+        @Override
+        protected void failed(Throwable e, Description description) {
+            takeScreenshot(description.getMethodName());
+        }
+    };
+
     @BeforeClass
     public static void setUp() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get("https://demoqa.com/dynamic-properties");
         customWait = new Custom_Waits(driver);
-        System.out.println("== Tests Started ==");
     }
 
-    // -----------------------------------------
+    /* ---------- TEST 1: VISIBILITY ---------- */
     @Test
     public void test1_visibility() {
-        System.out.println("Running Test 1...");
-        WebElement visibleBtn = customWait.waitForVisibility(By.id("visibleAfter"), 15);
-        Assert.assertTrue(visibleBtn.isDisplayed());
-        System.out.println("Test 1: Visible OK");
+
+        WebElement visibleBtn =
+                customWait.waitForVisibility(visibleAfter5SecBtn, 15);
+
+        Assert.assertNotNull("Element should be present", visibleBtn);
+        Assert.assertTrue("Element should be visible", visibleBtn.isDisplayed());
     }
 
-    // -----------------------------------------
+    /* ---------- TEST 2: ENABLED ---------- */
     @Test
     public void test2_enable() {
-        System.out.println("Running Test 2...");
-        WebElement enableBtn = customWait.waitForClickability(By.id("enableAfter"), 5);
-        Assert.assertTrue(enableBtn.isEnabled());
-        System.out.println("Test 2: Enabled OK");
+
+        WebElement enableBtn =
+                customWait.waitForClickability(enableAfter5SecBtn, 10);
+
+        Assert.assertNotNull("Element should be present", enableBtn);
+        Assert.assertTrue("Element should be enabled", enableBtn.isEnabled());
     }
 
-    // -----------------------------------------
+    /* ---------- TEST 3: COLOR CHANGE ---------- */
     @Test
     public void test3_colorChange() {
-        System.out.println("Running Test 3...");
-        customWait.waitForAttribute(By.id("colorChange"), "color", "rgba", 0);
 
-        String color = driver.findElement(By.id("colorChange")).getCssValue("color");
-        Assert.assertTrue(color.contains("rgba"));
-        System.out.println("Test 3: Color Changed OK");
+        customWait.waitForAttribute(colorChangeBtn, "color", "rgba", 10);
+
+        String color =
+                driver.findElement(colorChangeBtn).getCssValue("color");
+
+        Assert.assertNotNull("Color value should not be null", color);
+        Assert.assertTrue("Color should be in rgba format", color.contains("rgba"));
     }
 
-    // -----------------------------------------
     @AfterClass
     public static void tearDown() {
-    	System.out.println("== Tests Ended ==");
-        driver.quit();
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    /* ---------- SCREENSHOT UTILITY ---------- */
+    private static void takeScreenshot(String testName) {
+
+        try {
+            File dir = new File("screenshots");
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            File src =
+                    ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+
+            Files.copy(
+                    src.toPath(),
+                    new File(dir, testName + ".png").toPath(),
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+
+        } catch (IOException | WebDriverException ignored) {
+        }
     }
 }
