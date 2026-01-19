@@ -51,35 +51,3 @@ public class Registration {
 		driver.findElement(btn).click();
     }
 }
-//	public static void main(String[] args) {
-//		WebDriver driver =new ChromeDriver();
-//		First_Program first = new First_Program(driver);
-//		first.openUrl("https://tutorialsninja.com/demo/index.php?route=account/register");
-//		first.enterFirstname("HARI");
-//		first.enterLastname("Krishna");
-//		first.enterEmail("hk01@gmail.com");
-//	    first.enterTelephone("9876543210");
-//	    first.enterPassword("1432");
-//	    first.confirmPassword("1432");
-//	    first.toSubscribe();
-//	    first.toAgree();
-//	    first.toEnter();
-//	}
-
-
-
-// public static void main(String[] args) {
-//	WebDriver driver =new ChromeDriver();
-//	driver.get("https://tutorialsninja.com/demo/index.php?route=account/register");
-//	driver.manage().window().maximize();
-//	driver.findElement(By.id("input-firstname")).sendKeys("HARI");
-//	driver.findElement(By.id("input-lastname")).sendKeys("KRISHNA");
-//	driver.findElement(By.id("input-email")).sendKeys("hk01@gmail.com");
-//	driver.findElement(By.id("input-telephone")).sendKeys("9876543210");
-//	driver.findElement(By.id("input-password")).sendKeys("1432");
-//	driver.findElement(By.id("input-confirm")).sendKeys("1432");
-//	driver.findElement(By.xpath("//input[@value='0']")).click();
-//	driver.findElement(By.name("agree")).click();
-//	driver.findElement(By.xpath("//input[@value='Continue']")).click(); 
-//}
-//}
