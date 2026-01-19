@@ -6,14 +6,11 @@ import io.cucumber.testng.CucumberOptions;
 @CucumberOptions(
         features = "src/main/resources/",
         glue = "stepdefinitions",
-        tags = "@smoke or @regression",
+        tags = "@login",
         plugin = {
                 "pretty",
-                "html:target/cucumber-reports/cucumber.html",
-                "json:target/cucumber-reports/cucumber.json",
-                "rerun:target/failed_scenarios.txt"
-        },
-        monochrome = true
+                "html:target/cucumber-report.html"
+        }
 )
 public class LoginTests extends AbstractTestNGCucumberTests {
 }
