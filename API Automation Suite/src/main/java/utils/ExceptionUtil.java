@@ -1,10 +1,16 @@
 package utils;
 
-public class ExceptionUtil {
+import exception.FrameworkException;
 
-    public static RuntimeException throwException(String message, Exception e) {
-        System.err.println("ERROR: " + message);
-        e.printStackTrace();
-        return new RuntimeException(message, e);
+public final class ExceptionUtil {
+
+    private ExceptionUtil() {}
+
+    public static void fail(String message, Throwable t) {
+        throw new FrameworkException(message, t);
+    }
+
+    public static void fail(String message) {
+        throw new FrameworkException(message);
     }
 }
