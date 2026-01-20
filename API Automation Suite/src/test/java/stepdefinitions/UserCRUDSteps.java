@@ -5,22 +5,28 @@ import io.cucumber.java.en.*;
 import io.restassured.response.Response;
 import payloads.UserPayload;
 import specs.RequestSpecUtil;
+import utils.ExceptionUtil;
+
+import java.io.InputStream;
 
 import static io.restassured.RestAssured.given;
-import static org.testng.Assert.assertEquals;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
 
 public class UserCRUDSteps {
 
-    Response response;
-    String username = "HARI";
-    String invalidUser = "PREM";
+    private Response response;
+
+    private final String username = "HARI";
+    private final String invalidUser = "PREM";
+
+    // ================== SETUP ==================
 
     @Given("API is configured")
     public void apiConfigured() {
-        // Base configuration handled in RequestSpecUtil
+        // Base URI & headers handled in RequestSpecUtil
     }
 
-    // ---------- POSITIVE ----------
+    // ================== POSITIVE ==================
 
     @When("user creates a new user")
     public void createUser() {
@@ -59,7 +65,7 @@ public class UserCRUDSteps {
                 .delete(Endpoints.USER_BY_NAME);
     }
 
-    // ---------- NEGATIVE ----------
+    // ================== NEGATIVE ==================
 
     @When("user retrieves non existing user")
     public void retrieveInvalidUser() {
@@ -88,20 +94,52 @@ public class UserCRUDSteps {
                 .post(Endpoints.USER);
     }
 
-    // ---------- ASSERTION ----------
+    // ================== ASSERTIONS ==================
 
     @Then("response status code should be {int}")
     public void validateStatusCode(int expectedStatus) {
-
-        int actualStatus = response.getStatusCode();
-
-        // PetStore limitation handling
-        if (expectedStatus == 400 && actualStatus == 200) {
-            System.out.println(" PetStore API does not validate empty payloads. Returned 200 instead of 400.");
-            assertEquals(actualStatus, 200);
-        } else {
-            assertEquals(actualStatus, expectedStatus);
+        try {
+            response.then().statusCode(expectedStatus);
+        } catch (AssertionError e) {
+            ExceptionUtil.fail(
+                    "Status code validation failed. Expected: "
+                            + expectedStatus
+                            + ", Actual: "
+                            + response.getStatusCode(),
+                    e
+            );
         }
     }
 
+    // ================== SCHEMA VALIDATION ==================
+    // Applied ONLY for GET user API
+
+    @Then("response should match user schema")
+    public void validateUserSchema() {
+
+        if (response == null) {
+            ExceptionUtil.fail("Response is null. API not executed.");
+        }
+
+        // Apply schema ONLY when actual user object is returned
+        if (!response.asString().contains("\"username\"")) {
+            System.out.println("ℹ️ Schema validation skipped: response is not a user object");
+            return;
+        }
+
+        try {
+            InputStream schemaStream = getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("schemas/userSchema.json");
+
+            if (schemaStream == null) {
+                ExceptionUtil.fail("Schema not found: schemas/userSchema.json");
+            }
+
+            response.then().body(matchesJsonSchema(schemaStream));
+
+        } catch (AssertionError e) {
+            ExceptionUtil.fail("User schema validation failed", e);
+        }
+    }
 }
