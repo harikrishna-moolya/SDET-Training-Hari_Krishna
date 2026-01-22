@@ -17,9 +17,27 @@ public class AuthTests {
         RestAssured.baseURI = "https://dummyjson.com";
     }
 
-    // Login and get access + refresh tokens
+    // -------------------------------------------------
+    // BASIC AUTHENTICATION (FIX ADDED)
+    // -------------------------------------------------
+    @Test(priority = 0)
+    public void basicAuthenticationTest() {
+
+        given()
+                .auth().preemptive().basic("emilys", "emilyspass")
+                .when()
+                .get("/auth/me")
+                .then()
+                .statusCode(200)
+                .log().all();
+    }
+
+    // -------------------------------------------------
+    // LOGIN & GET ACCESS + REFRESH TOKENS
+    // -------------------------------------------------
     @Test(priority = 1)
     public void loginAndGetTokens() {
+
         Response resp =
                 given()
                         .header("Content-Type", "application/json")
@@ -30,17 +48,19 @@ public class AuthTests {
                         .statusCode(200)
                         .extract().response();
 
-        accessToken = resp.jsonPath().getString("accessToken");  // ✅ correct key
+        accessToken = resp.jsonPath().getString("accessToken");
         refreshToken = resp.jsonPath().getString("refreshToken");
 
         System.out.println("Access Token: " + accessToken);
         System.out.println("Refresh Token: " + refreshToken);
     }
 
-
-    // Access protected endpoint using Bearer token
+    // -------------------------------------------------
+    // ACCESS PROTECTED ENDPOINT USING BEARER TOKEN
+    // -------------------------------------------------
     @Test(priority = 2, dependsOnMethods = "loginAndGetTokens")
     public void accessMeWithBearer() {
+
         given()
                 .header("Authorization", "Bearer " + accessToken)
                 .when()
@@ -50,11 +70,12 @@ public class AuthTests {
                 .log().all();
     }
 
-
-    //  Refresh the access token using refresh token
-
+    // -------------------------------------------------
+    // REFRESH ACCESS TOKEN
+    // -------------------------------------------------
     @Test(priority = 3, dependsOnMethods = "loginAndGetTokens")
     public void refreshAccessToken() {
+
         Response resp =
                 given()
                         .header("Content-Type", "application/json")
@@ -65,22 +86,22 @@ public class AuthTests {
                         .statusCode(200)
                         .extract().response();
 
-        accessToken = resp.jsonPath().getString("accessToken"); // ✅ correct key
+        accessToken = resp.jsonPath().getString("accessToken");
         System.out.println("Refreshed Access Token: " + accessToken);
     }
 
-
-    //  Access protected endpoint with refreshed token
+    // -------------------------------------------------
+    // ACCESS WITH REFRESHED TOKEN
+    // -------------------------------------------------
     @Test(priority = 4, dependsOnMethods = "refreshAccessToken")
     public void accessMeWithRefreshedToken() {
+
         given()
                 .header("Authorization", "Bearer " + accessToken)
-                .log().all()
                 .when()
                 .get("/auth/me")
                 .then()
-                .log().all()
-                .statusCode(200);
+                .statusCode(200)
+                .log().all();
     }
 }
-
